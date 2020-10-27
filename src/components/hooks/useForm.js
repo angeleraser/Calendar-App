@@ -14,6 +14,8 @@ export const useForm = (initState = {}) => {
     },
     reset = () => {
       setFormValues(initState);
+      setStartDate(initDate.toDate());
+      setEndDate(lastDate.toDate());
     },
     handleSubmit = (callback) => {
       return (e) => {
@@ -23,7 +25,7 @@ export const useForm = (initState = {}) => {
     };
   return [
     [formValues, startDate, endDate],
-    [handleInputChange, setStartDate, setEndDate],
+    [handleInputChange, setStartDate, setEndDate, setFormValues],
     handleSubmit,
     reset,
   ];

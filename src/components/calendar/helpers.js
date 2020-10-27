@@ -1,11 +1,19 @@
 import { eventSetActive } from "../../actions/calendar";
+import { eventClearActiveEvent, openModal } from "../../actions/ui";
 
-export const onDoubleClick = (e) => {
-  return;
+export const onDoubleClick = (dispatch) => {
+  return (event) => {
+    dispatch(openModal());
+  };
 };
 export const onSelectEvent = (dispatch) => {
   return (event) => {
     dispatch(eventSetActive({ ...event }));
+  };
+};
+export const onSelectSlot = (dispatch) => {
+  return (e) => {
+    dispatch(eventClearActiveEvent());
   };
 };
 export const onChangeView = (setLastView) => {

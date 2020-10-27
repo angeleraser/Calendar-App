@@ -3,29 +3,24 @@ import { Navbar } from "../ui/Navbar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
+import { DeleteEventFab } from "../ui/DeleteEventFab";
 import { CalendarEvent } from "./CalendarEvent";
 import {
   eventStyleGetter,
   onChangeView,
   onDoubleClick,
   onSelectEvent,
+  onSelectSlot,
 } from "./helpers";
 import { CalendarModal } from "./CalendarModal";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AddNewFab } from "../ui/AddNewFab";
 const localizer = momentLocalizer(moment);
-const events = [
-  {
-    title: "Learn React",
-    start: moment().toDate(),
-    end: moment().add(2, "hours").toDate(),
-    bgColor: "#fafafa",
-  },
-];
 export const CalendarScreen = () => {
   const [lastView, setLastView] = useState(
       localStorage.getItem("last-view") || "month"
     ),
+    { events, activeEvent } = useSelector(({ calendar }) => calendar),
     dispatch = useDispatch();
   return (
     <div className="calendar-screen">
@@ -36,14 +31,17 @@ export const CalendarScreen = () => {
         startAccessor="start"
         endAccessor="end"
         eventPropGetter={eventStyleGetter}
-        onDoubleClickEvent={onDoubleClick}
+        onDoubleClickEvent={onDoubleClick(dispatch)}
         onSelectEvent={onSelectEvent(dispatch)}
+        onSelectSlot={onSelectSlot(dispatch)}
+        selectable={true}
         onView={onChangeView(setLastView)}
         view={lastView}
         components={{
           event: CalendarEvent,
         }}
       />
+      {!!activeEvent && <DeleteEventFab />}
       <AddNewFab />
       <CalendarModal />
     </div>

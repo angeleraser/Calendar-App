@@ -10,7 +10,7 @@ export const AddNewFab = () => {
         dispatch(openModal());
       }}
       className="fab btn btn-primary">
-      Add
+      <i className="fa fa-plus"></i>
     </button>
   );
 };
