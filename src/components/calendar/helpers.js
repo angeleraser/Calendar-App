@@ -22,15 +22,17 @@ export const onChangeView = (setLastView) => {
     localStorage.setItem("last-view", e);
   };
 };
-export const eventStyleGetter = (event, start, end, isSelected) => {
-  const style = {
-    backgroundColor: "#367cf7",
-    borderRadius: "0px",
-    opacity: "0.8",
-    display: "block",
-    color: "#fff",
-  };
-  return {
-    style,
+export const eventStyleGetter = (activeUser) => {
+  return (event, start, end, isSelected) => {
+    const style = {
+      backgroundColor: activeUser === event.user._id ? "#367cf7" : "#465660",
+      borderRadius: "0px",
+      opacity: "0.8",
+      display: "block",
+      color: "#fff",
+    };
+    return {
+      style,
+    };
   };
 };

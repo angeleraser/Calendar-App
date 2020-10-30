@@ -7,7 +7,10 @@ import { useForm } from "../hooks/useForm";
 import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
 import { closeModal, eventClearActiveEvent } from "../../actions/ui";
-import { eventAddNew, eventUpdated } from "../../actions/calendar";
+import {
+  eventStartAddNew,
+  eventStartUpdate,
+} from "../../actions/calendar";
 const customStyles = {
   content: {
     top: "50%",
@@ -56,15 +59,10 @@ export const CalendarModal = () => {
           notes,
           start: startDate,
           end: endDate,
-          id: new Date().getTime(),
-          user: {
-            _id: "21bmn6b6mn12vm",
-            name: "Angel",
-          },
         };
         if (activeEvent) {
           dispatch(
-            eventUpdated({
+            eventStartUpdate({
               ...activeEvent,
               title,
               notes,
@@ -73,7 +71,7 @@ export const CalendarModal = () => {
             })
           );
         } else {
-          dispatch(eventAddNew(event));
+          dispatch(eventStartAddNew(event));
         }
         resetForm();
         dispatch(eventClearActiveEvent());

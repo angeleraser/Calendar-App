@@ -1,5 +1,8 @@
 const baseURL = process.env.REACT_APP_API_URL;
-export const asyncFetchData = (endpoint, data = {}, { token = null } = {}) => {
+export const asyncFetchData = (
+  endpoint,
+  { method = "GET", body, token } = {}
+) => {
   const url = `${baseURL}/${endpoint}`,
     headers = {
       "Content-type": "application/json",
@@ -7,13 +10,16 @@ export const asyncFetchData = (endpoint, data = {}, { token = null } = {}) => {
   if (token) {
     headers["x-token"] = token;
   }
-  return {
-    method(name = "GET") {
-      return fetch(url, {
-        method: name,
-        headers: headers,
-        body: JSON.stringify(data),
-      });
-    },
-  };
+  if (method === "GET") {
+    return fetch(url, {
+      method,
+      headers,
+    });
+  } else {
+    return fetch(url, {
+      method,
+      headers,
+      body: JSON.stringify(body),
+    });
+  }
 };
