@@ -5,6 +5,7 @@ export const DeleteEventFab = () => {
   return (
     <button
       onClick={() => {
+        console.log('Click')
         dispatch(eventStartDelete());
       }}
       className="fab-danger btn btn-danger">

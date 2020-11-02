@@ -7,10 +7,7 @@ import { useForm } from "../hooks/useForm";
 import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
 import { closeModal, eventClearActiveEvent } from "../../actions/ui";
-import {
-  eventStartAddNew,
-  eventStartUpdate,
-} from "../../actions/calendar";
+import { eventStartAddNew, eventStartUpdate } from "../../actions/calendar";
 const customStyles = {
   content: {
     top: "50%",
@@ -21,7 +18,9 @@ const customStyles = {
     transform: "translate(-50%, -50%)",
   },
 };
-Modal.setAppElement("#root");
+if (process.env.NODE_ENV !== "test") {
+  Modal.setAppElement("#root");
+}
 export const CalendarModal = () => {
   const [
       formValues,

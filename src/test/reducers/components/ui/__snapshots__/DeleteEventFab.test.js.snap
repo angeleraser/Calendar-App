@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing <DeleteEventFav/> component should render correctly 1`] = `
+<div>
+  <button
+    class="fab-danger btn btn-danger"
+  >
+    Delete 
+    <i
+      class="fa fa-trash"
+    />
+  </button>
+</div>
+`;
