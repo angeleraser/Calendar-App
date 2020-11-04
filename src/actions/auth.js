@@ -2,10 +2,11 @@
 import Swal from "sweetalert2";
 import { asyncFetchData } from "../helpers/fetchData";
 import { TYPES } from "../types/types";
+import { finishLoading, startLoading } from "./ui";
 export const startLogin = (email, password) => {
   return async (dispatch) => {
     try {
-      console.log("Login...");
+      dispatch(startLoading());
       const response = await asyncFetchData("auth", {
         method: "POST",
         body: {
@@ -21,19 +22,19 @@ export const startLogin = (email, password) => {
         dispatch(login(name, uid));
       } else {
         Swal.fire("Error", msg, "error");
+        dispatch(finishLoading());
       }
     } catch (error) {
       console.log(error);
-    } finally {
-      console.log("Finish login!");
+      dispatch(finishLoading());
     }
   };
 };
 
 export const startRegister = (email, name, password) => {
   return async (dispatch) => {
-    console.log("Register...");
     try {
+      dispatch(startLoading());
       const response = await asyncFetchData("auth/register", {
         method: "POST",
         body: {
@@ -42,14 +43,14 @@ export const startRegister = (email, name, password) => {
           email,
         },
       });
-      const { uid, name: username, token, ok, msg } = await response.json();
-      if (ok) {
-        localStorage.setItem("token", token);
+      const body = await response.json();
+      if (body.ok) {
+        localStorage.setItem("token", body.token);
         localStorage.setItem("token-init-date", new Date().getTime());
-        dispatch(login(username, uid));
-        console.log("Register finished!");
+        dispatch(login(body.name, body.uid));
       } else {
-        Swal.fire("Error", msg, "error");
+        Swal.fire("Error", body.msg, "error");
+        dispatch(finishLoading());
       }
     } catch (error) {
       console.log(error);
@@ -61,7 +62,6 @@ export const startRegister = (email, name, password) => {
 export const startChecking = () => {
   return async (dispatch) => {
     try {
-      console.log("Checking token...");
       const response = await asyncFetchData("auth/renew-token", {
         method: "GET",
         token: localStorage.getItem("token") || "",
@@ -69,14 +69,12 @@ export const startChecking = () => {
       const data = await response.json();
       if (data.ok) {
         dispatch(login(data.name, data.uid));
-        console.log("Checking token done!");
       }
     } catch (error) {
       console.log(error);
       console.log("Checking token failed :(");
     } finally {
       dispatch(finishChecking());
-      console.log("Checking token finished");
     }
   };
 };

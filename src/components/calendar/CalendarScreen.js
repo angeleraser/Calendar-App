@@ -16,40 +16,52 @@ import { CalendarModal } from "./CalendarModal";
 import { useDispatch, useSelector } from "react-redux";
 import { AddNewFab } from "../ui/AddNewFab";
 import { eventStartLoading } from "../../actions/calendar";
+import { LoadingScreen } from "../LoadingScreen/LoadingScreen";
 const localizer = momentLocalizer(moment);
 export const CalendarScreen = () => {
-    useEffect(() => {
+  useEffect(() => {
     dispatch(eventStartLoading());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const [lastView, setLastView] = useState(
-      localStorage.getItem("last-view") || "month"
-    ),
-    { events, activeEvent } = useSelector(({ calendar }) => calendar);
+    localStorage.getItem("last-view") || "month"
+  );
+  const { events, activeEvent, uid: activeUser, isLoading } = useSelector(
+    ({ calendar, ui, auth }) => ({
+      ...calendar,
+      ...ui,
+      ...auth,
+    })
+  );
   const dispatch = useDispatch();
-  const { uid: activeUser} = useSelector(({ auth }) => auth);
   return (
     <div className="calendar-screen">
-      <Navbar />
-      <Calendar
-        localizer={localizer}
-        events={events}
-        startAccessor="start"
-        endAccessor="end"
-        eventPropGetter={eventStyleGetter(activeUser)}
-        onDoubleClickEvent={onDoubleClick(dispatch)}
-        onSelectEvent={onSelectEvent(dispatch)}
-        onSelectSlot={onSelectSlot(dispatch)}
-        selectable={true}
-        onView={onChangeView(setLastView)}
-        view={lastView}
-        components={{
-          event: CalendarEvent,
-        }}
-      />
-      {!!activeEvent && <DeleteEventFab />}
-      <AddNewFab />
-      <CalendarModal />
+      {isLoading ? (
+        <LoadingScreen />
+      ) : (
+        <>
+          <Navbar />
+          <Calendar
+            localizer={localizer}
+            events={events}
+            startAccessor="start"
+            endAccessor="end"
+            eventPropGetter={eventStyleGetter(activeUser)}
+            onDoubleClickEvent={onDoubleClick(dispatch)}
+            onSelectEvent={onSelectEvent(dispatch)}
+            onSelectSlot={onSelectSlot(dispatch)}
+            selectable={true}
+            onView={onChangeView(setLastView)}
+            view={lastView}
+            components={{
+              event: CalendarEvent,
+            }}
+          />
+          {!!activeEvent && <DeleteEventFab />}
+          <AddNewFab />
+          <CalendarModal />
+        </>
+      )}
     </div>
   );
 };

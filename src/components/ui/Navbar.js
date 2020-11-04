@@ -6,15 +6,18 @@ export const Navbar = () => {
   const { name: username } = useSelector(({ auth }) => auth);
   const dispatch = useDispatch();
   return (
-    <nav className="navbar navbar-dark bg-dark mb-4">
-      <span className="navbar-brand">{username}</span>
+    <nav className="navbar navbar-dark bg-dark">
+      <span className="navbar-brand">
+        <i className="fa fa-user mr-2"></i>
+        {username}
+      </span>
       <button
         onClick={() => {
           dispatch(startLogout());
           dispatch(eventLogoutCleanup());
         }}
         className="btn btn-outline-danger">
-        Salir
+        <i className="fa fa-close"></i> Logout
       </button>
     </nav>
   );

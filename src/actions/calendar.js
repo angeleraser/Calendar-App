@@ -3,6 +3,7 @@ import Swal from "sweetalert2";
 import { asyncFetchData } from "../helpers/fetchData";
 import { prepareEvents } from "../helpers/prepareEvent";
 import { TYPES } from "../types/types";
+import { finishLoading, startLoading } from "./ui";
 
 const eventAddNew = (event) => {
   return {
@@ -14,9 +15,8 @@ const eventAddNew = (event) => {
 export const eventStartAddNew = (event) => {
   return async (dispatch, getState) => {
     try {
-      console.log("Saving event...");
       Swal.fire({
-        title: "Guardando evento...",
+        title: "Saving...",
         allowOutsideClick: false,
         willOpen() {
           Swal.showLoading();
@@ -43,25 +43,22 @@ export const eventStartAddNew = (event) => {
           },
         };
         dispatch(eventAddNew(newEvent));
-        console.log("Saving event done!");
       }
     } catch (error) {
       console.log(error);
-      console.log("Saving event failed :(");
     } finally {
-      console.log("Saving event process finished");
       Swal.close();
     }
   };
 };
 
-export const eventStartDelete = () => {
+export const eventStartDelete = (setIsLoading) => {
   return async (dispatch, getState) => {
     try {
+      setIsLoading(true);
       const {
         activeEvent: { id },
       } = getState().calendar;
-      console.log("Deleting event...");
       const response = await asyncFetchData(`events/${id}`, {
         method: "DELETE",
         token: localStorage.getItem("token") || "",
@@ -69,22 +66,18 @@ export const eventStartDelete = () => {
       const data = await response.json();
       if (data.ok) {
         dispatch(eventDeleted());
-        console.log("Deleting event done!");
       } else {
         Swal.fire("Error", data.msg, "error");
-        console.log("Deleting event failed error");
       }
     } catch (error) {
       console.log(error);
-      console.log("Deleting event failed :(");
-    }
+    } 
   };
 };
 
 export const eventStartUpdate = (event) => {
   return async (dispatch) => {
     try {
-      console.log("Updating event...");
       const response = await asyncFetchData(`events/${event.id}`, {
         method: "PUT",
         body: {
@@ -95,10 +88,8 @@ export const eventStartUpdate = (event) => {
       const data = await response.json();
       if (data.ok) {
         dispatch(eventUpdated(event));
-        console.log("Updating event done!");
       } else {
         Swal.fire("Error", data.msg, "error");
-        console.log("Updating event failed error");
       }
     } catch (error) {
       console.log(error);
@@ -125,20 +116,18 @@ export const eventDeleted = () => ({
 
 export const eventStartLoading = () => {
   return async (dispatch) => {
-    console.log("Loading events...");
     try {
+      dispatch(startLoading());
       const response = await asyncFetchData("events", {
         method: "GET",
         token: localStorage.getItem("token") || "",
       });
       const { events } = await response.json();
       dispatch(eventLoaded(prepareEvents(events)));
-      console.log("Loading events sucess!");
     } catch (error) {
       console.log(error);
-      console.log("Loading events failed :(");
     } finally {
-      console.log("Loading events process finished!");
+      dispatch(finishLoading());
     }
   };
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { startRegister } from "../../actions/auth";
 import { useForm } from "../hooks/useForm";
@@ -10,34 +10,36 @@ export const RegisterForm = () => {
       [handleRegisterInputChange],
       handleRegisterSubmit,
     ] = useForm({
-      registerName: "Angelo",
-      registerEmail: "angelo123@gmail.com",
-      registerPassword1: "123456",
-      registerPassword2: "123456",
+      registerName: "",
+      registerEmail: "",
+      registerPassword1: "",
+      registerPassword2: "",
     }),
     {
       registerName,
       registerEmail,
       registerPassword1,
       registerPassword2,
-    } = registerFormValues,
-    dispatch = useDispatch(),
-    dispatchRegisterActions = () => {
-      if (registerPassword1 === registerPassword2) {
-        dispatch(startRegister(registerEmail, registerName, registerPassword1));
-      } else {
-        Swal.fire("Error", "Las contrasenas deben ser iguales", "error");
-      }
-    };
+    } = registerFormValues;
+  const dispatch = useDispatch();
+  const { isLoading } = useSelector((state) => state.ui);
+  const dispatchRegisterActions = () => {
+    if (registerPassword1 === registerPassword2) {
+      dispatch(startRegister(registerEmail, registerName, registerPassword1));
+    } else {
+      Swal.fire("Error", "Passwords should be equal.", "error");
+    }
+  };
   return (
     <div className="col-md-6 login-form-2">
-      <h3>Registro</h3>
+      <h3>Sign Up</h3>
       <form onSubmit={handleRegisterSubmit(dispatchRegisterActions)}>
         <div className="form-group">
           <input
+            required={true}
             type="text"
             className="form-control"
-            placeholder="Nombre"
+            placeholder="Name"
             value={registerName}
             onChange={handleRegisterInputChange}
             name="registerName"
@@ -45,9 +47,10 @@ export const RegisterForm = () => {
         </div>
         <div className="form-group">
           <input
+            required={true}
             type="email"
             className="form-control"
-            placeholder="Correo"
+            placeholder="email@example.com"
             value={registerEmail}
             onChange={handleRegisterInputChange}
             name="registerEmail"
@@ -55,9 +58,10 @@ export const RegisterForm = () => {
         </div>
         <div className="form-group">
           <input
+            required={true}
             type="password"
             className="form-control"
-            placeholder="Contraseña"
+            placeholder="Password"
             value={registerPassword1}
             onChange={handleRegisterInputChange}
             name="registerPassword1"
@@ -66,9 +70,10 @@ export const RegisterForm = () => {
 
         <div className="form-group">
           <input
+            required={true}
             type="password"
             className="form-control"
-            placeholder="Repita la contraseña"
+            placeholder="Repeat your password"
             value={registerPassword2}
             onChange={handleRegisterInputChange}
             name="registerPassword2"
@@ -76,7 +81,9 @@ export const RegisterForm = () => {
         </div>
 
         <div className="form-group">
-          <input type="submit" className="btnSubmit" value="Crear cuenta" />
+          <button disabled={isLoading} className="btnSubmit" type="submit">
+            {isLoading ? "Loading..." : "Register"}
+          </button>
         </div>
       </form>
     </div>

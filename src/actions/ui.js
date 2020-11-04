@@ -13,3 +13,11 @@ export const eventClearActiveEvent= () => {
     type: TYPES.eventClearActiveEvent,
   };
 };
+
+export const startLoading = () => ({
+  type: TYPES.uiStartLoading,
+});
+
+export const finishLoading = () => ({
+  type: TYPES.uiFinishLoading,
+});

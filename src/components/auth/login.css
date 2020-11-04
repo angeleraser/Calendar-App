@@ -1,5 +1,11 @@
 .login-container {
   margin: auto;
+  padding: 30px 0;
+  font-family: "Roboto", sans-serif;
+}
+
+.login-container h2 {
+  font-size: 52px;
 }
 .login-form-1 {
   border-radius: 5px;
@@ -28,6 +34,7 @@
   border-radius: 1rem;
   padding: 1.5%;
   border: none;
+  font-family: "Roboto", sans-serif;
   cursor: pointer;
 }
 .login-form-1 .btnSubmit {
@@ -41,10 +48,12 @@
 .login-form-2 .ForgetPwd {
   color: #fff;
   font-weight: 600;
+  font-family: "Roboto", sans-serif;
   text-decoration: none;
 }
 .login-form-1 .ForgetPwd {
   color: #0062cc;
+  font-family: "Roboto", sans-serif;
   font-weight: 600;
   text-decoration: none;
 }

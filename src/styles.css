@@ -4,11 +4,12 @@ body {
   height: 100%;
 }
 
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap");
+
 #root {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  max-width: 1440px;
   min-width: 360px;
   min-height: 100vh;
   margin: 0 auto;
@@ -18,9 +19,12 @@ body {
 .calendar-screen,
 .rbc-calendar {
   width: 100%;
+  font-family: "Roboto", sans-serif;
   min-height: 100vh;
 }
-
+.rbc-calendar {
+  margin-top: 20px;
+}
 * Modal */ .ReactModalPortal > div {
   opacity: 0;
 }
@@ -59,6 +63,7 @@ body {
   max-width: 500px;
   outline: none;
   padding: 10px;
+  font-family: "Roboto", sans-serif;
 }
 
 .react-datetime-picker input:focus {
@@ -74,6 +79,7 @@ body {
   position: fixed;
   font-size: 22px;
   bottom: 25px;
+  font-family: "Roboto", sans-serif;
   width: 60px;
   height: 60px;
   z-index: 100;
@@ -87,4 +93,13 @@ body {
   bottom: 25px;
   left: 25px;
   z-index: 100;
+  font-family: "Roboto", sans-serif;
+}
+
+button:focus {
+  outline: none;
+}
+
+button:disabled {
+  cursor: not-allowed;
 }

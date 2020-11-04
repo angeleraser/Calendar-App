@@ -23,61 +23,61 @@ if (process.env.NODE_ENV !== "test") {
 }
 export const CalendarModal = () => {
   const [
-      formValues,
-      [handleInputValue, setStartDate, setEndDate, setFormValues],
-      handleSubmit,
-      resetForm,
-    ] = useForm({
-      title: "",
-      notes: "",
-    }),
-    [{ title, notes }, startDate, endDate] = formValues,
-    [isInvalid, setInvalid] = useState(false),
-    { isModalOpen } = useSelector(({ ui }) => ui),
-    { activeEvent } = useSelector(({ calendar }) => calendar),
-    dispatch = useDispatch(),
-    onRequestcloseModal = () => {
+    formValues,
+    [handleInputValue, setStartDate, setEndDate, setFormValues],
+    handleSubmit,
+    resetForm,
+  ] = useForm({
+    title: "",
+    notes: "",
+  });
+  const [{ title, notes }, startDate, endDate] = formValues;
+  const [isInvalid, setInvalid] = useState(false);
+  const { isModalOpen } = useSelector(({ ui }) => ui);
+  const { activeEvent } = useSelector(({ calendar }) => calendar);
+  const dispatch = useDispatch();
+  const onRequestcloseModal = () => {
+    dispatch(eventClearActiveEvent());
+    dispatch(closeModal());
+    resetForm();
+  };
+  const validateForm = () => {
+    const momentStart = moment(startDate),
+      momentEnd = moment(endDate);
+    if (momentStart.isSameOrAfter(momentEnd)) {
+      return Swal.fire(
+        "Error",
+        "Start date should be less than end date.",
+        "error"
+      );
+    } else if (title.trim().length < 2) {
+      setInvalid(true);
+    } else {
+      const event = {
+        title,
+        notes,
+        start: startDate,
+        end: endDate,
+      };
+      if (activeEvent) {
+        dispatch(
+          eventStartUpdate({
+            ...activeEvent,
+            title,
+            notes,
+            start: startDate,
+            end: endDate,
+          })
+        );
+      } else {
+        dispatch(eventStartAddNew(event));
+      }
+      resetForm();
       dispatch(eventClearActiveEvent());
       dispatch(closeModal());
-      resetForm();
-    },
-    validateForm = () => {
-      const momentStart = moment(startDate),
-        momentEnd = moment(endDate);
-      if (momentStart.isSameOrAfter(momentEnd)) {
-        return Swal.fire(
-          "Error",
-          "Fecha de inicio debe ser menor a la fecha de fin",
-          "error"
-        );
-      } else if (title.trim().length < 2) {
-        setInvalid(true);
-      } else {
-        const event = {
-          title,
-          notes,
-          start: startDate,
-          end: endDate,
-        };
-        if (activeEvent) {
-          dispatch(
-            eventStartUpdate({
-              ...activeEvent,
-              title,
-              notes,
-              start: startDate,
-              end: endDate,
-            })
-          );
-        } else {
-          dispatch(eventStartAddNew(event));
-        }
-        resetForm();
-        dispatch(eventClearActiveEvent());
-        dispatch(closeModal());
-        setInvalid(false);
-      }
-    };
+      setInvalid(false);
+    }
+  };
   // Reset or update form if active note
   useEffect(() => {
     if (activeEvent) {
@@ -101,11 +101,11 @@ export const CalendarModal = () => {
       onRequestClose={onRequestcloseModal}
       closeTimeoutMS={200}
       style={customStyles}>
-      <h1> Nuevo evento </h1>
+      <h1> New Event</h1>
       <hr />
       <form onSubmit={handleSubmit(validateForm)} className="container">
         <div className="form-group">
-          <label>Fecha y hora inicio</label>
+          <label>Start date</label>
           <DateTimePicker
             onChange={setStartDate}
             value={startDate}
@@ -113,7 +113,7 @@ export const CalendarModal = () => {
           />
         </div>
         <div className="form-group">
-          <label>Fecha y hora fin</label>
+          <label>End date</label>
           <DateTimePicker
             onChange={setEndDate}
             value={endDate}
@@ -123,36 +123,30 @@ export const CalendarModal = () => {
         </div>
         <hr />
         <div className="form-group">
-          <label>Titulo y notas</label>
+          <label>Subject and notes</label>
           <input
             type="text"
             className={`form-control ${isInvalid ? "is-invalid" : ""}`}
-            placeholder="Título del evento"
+            placeholder="Subject"
             name="title"
             value={title}
             onChange={handleInputValue}
             autoComplete="off"
           />
-          <small id="emailHelp" className="form-text text-muted">
-            Una descripción corta
-          </small>
         </div>
         <div className="form-group">
           <textarea
             type="text"
             className="form-control"
-            placeholder="Notas"
+            placeholder="Type your notes here..."
             rows="5"
             name="notes"
             value={notes}
             onChange={handleInputValue}></textarea>
-          <small id="emailHelp" className="form-text text-muted">
-            Información adicional
-          </small>
         </div>
         <button type="submit" className="btn btn-outline-primary btn-block">
-          <i className="far fa-save"></i>
-          <span> Guardar</span>
+          <i className="fa fa-save"></i>
+          <span> Save</span>
         </button>
       </form>
     </Modal>

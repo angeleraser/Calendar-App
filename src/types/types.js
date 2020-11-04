@@ -1,6 +1,8 @@
 export const TYPES = {
   uiOpenModal: "[UI] Open Modal",
   uiCloseModal: "[UI] Close Modal",
+  uiStartLoading: "[UI] Start Loading",
+  uiFinishLoading: "[UI] Finish Loading",
 
   eventSetActive: "[Event] Set active",
   eventLogoutCleanup: "[Event] Logout cleanup",
