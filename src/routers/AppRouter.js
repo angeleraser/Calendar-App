@@ -32,7 +32,7 @@ export const AppRouter = () => {
           path="/"
           component={CalendarScreen}
         />
-        <Redirect to="/login" />
+        <Redirect to="/" />
       </Switch>
     </BrowserRouter>
   );
