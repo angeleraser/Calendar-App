@@ -24,10 +24,13 @@ export const RegisterForm = () => {
   const dispatch = useDispatch();
   const { isLoading } = useSelector((state) => state.ui);
   const dispatchRegisterActions = () => {
-    if (registerPassword1 === registerPassword2) {
+    if (
+      registerPassword1 === registerPassword2 &&
+      registerPassword1.length > 5
+    ) {
       dispatch(startRegister(registerEmail, registerName, registerPassword1));
     } else {
-      Swal.fire("Error", "Passwords should be equal.", "error");
+      Swal.fire("Error", "Passwords should be equal and more than 5 characters.", "error");
     }
   };
   return (
